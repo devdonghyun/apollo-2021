@@ -12,6 +12,10 @@ const GET_MOVIE = gql`
             rating
             description_intro
         }
+        suggestions(id: $id) {
+            id
+            medium_cover_image
+        }
     }
 `
 
@@ -53,25 +57,36 @@ const Container = styled.div`
    background-position: center center;
  `;
 
+ const Suggestion = styled.div`
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   grid-gap: 25px;
+   width: 25%;
+   height: 60%;
+   background-color: transparent;
+   background-image: url(${props => props.bg});
+   background-size: cover;
+   background-position: center center;
+ `;
+
 export default () => {
     const { id } = useParams();
     const { loading, data } = useQuery(GET_MOVIE, {
         variables: { id: +id }
     });
+    console.log(data?.suggestions)
     return (
         <Container>
           <Column>
             <Title>{loading ? "Loading..." : data.movie.title}</Title>
-            {!loading && data.movie && (
-                <>
-                    <Subtitle>{data.movie.language} · {data.movie.rating}</Subtitle>
-                    <Description>{data.movie.description_intro}</Description>
-                </>
-            )}
+                <Subtitle>{data?.movie?.language} · {data?.movie?.rating}</Subtitle>
+                <Description>{data?.movie?.description_intro}</Description>
+                <div>{data?.suggestions?.map(s => <Suggestion key={s.id} id={s.id} bg = {s.medium_cover_image} />)}</div>
           </Column>
-          <Poster bg = {data && data.movie ? data.movie.medium_cover_image : ""}></Poster>
+          <Poster bg = {data?.movie?.medium_cover_image}></Poster>
         </Container>
       );
+
     // if (loading) {
     //     return "loading...";
     // } 
