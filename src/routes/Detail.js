@@ -2,15 +2,19 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client"
 import styled from "styled-components";
+import { Movies } from "./Home"
+import Movie from "../components/Movie";
 
 const GET_MOVIE = gql`
     query getMovie($id: Int!) {
         movie(id: $id) {
+            id
             title
             medium_cover_image
             language
             rating
             description_intro
+            isLiked @client
         }
         suggestions(id: $id) {
             id
@@ -57,16 +61,13 @@ const Container = styled.div`
    background-position: center center;
  `;
 
- const Suggestion = styled.div`
+ const Suggestions = styled.div`
    display: grid;
    grid-template-columns: repeat(4, 1fr);
    grid-gap: 25px;
-   width: 25%;
-   height: 60%;
-   background-color: transparent;
-   background-image: url(${props => props.bg});
-   background-size: cover;
-   background-position: center center;
+   width: 100%;
+   position: relative;
+   top: 40px;
  `;
 
 export default () => {
@@ -78,10 +79,14 @@ export default () => {
     return (
         <Container>
           <Column>
-            <Title>{loading ? "Loading..." : data.movie.title}</Title>
+            <Title>{loading ? "Loading..." : `${data.movie.title} ${data.movie.isLiked ? "❤️" : "💔"}`}</Title>
                 <Subtitle>{data?.movie?.language} · {data?.movie?.rating}</Subtitle>
                 <Description>{data?.movie?.description_intro}</Description>
-                <div>{data?.suggestions?.map(s => <Suggestion key={s.id} id={s.id} bg = {s.medium_cover_image} />)}</div>
+                <Suggestions>
+                  {data?.suggestions?.map(s => (
+                      <Movie key={s.id} id={s.id} bg={s.medium_cover_image}></Movie>
+                    ))}
+                </Suggestions>
           </Column>
           <Poster bg = {data?.movie?.medium_cover_image}></Poster>
         </Container>

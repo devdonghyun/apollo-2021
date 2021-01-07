@@ -67,7 +67,7 @@ export default () => {
            {!loading && data.movies && data.movies.map(m => <Movie key = {m.id} id = {m.id} /> )} */}
             <Movies>
             {data?.movies?.map(m => (
-                <Movie key={m.id} id={m.id} isLiked = {m.isLiked} bg={m.medium_cover_image} />
+                <Movie key={m.id} id={m.id} isLiked={m.isLiked} bg={m.medium_cover_image} />
             ))}
             </Movies>
          </Container>
