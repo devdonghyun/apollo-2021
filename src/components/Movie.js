@@ -24,6 +24,13 @@ const Container = styled.div`
    background-position: center center;
  `;
 
+ const ToggleLike = styled.button`
+  background-color: transparent;
+  border: transparent;
+  font-size: 20px;
+`;
+
+
  export default ({ id, bg, isLiked }) => {
    const [toggleLikeMovie] = useMutation(LIKE_MOVIE, { variables: { id, isLiked }});
    return (
@@ -31,7 +38,8 @@ const Container = styled.div`
         <Link to={`/${id}`}>
           <Poster bg={bg} />
         </Link>
-        <button onClick={toggleLikeMovie}>{isLiked ? "UnLike" : "Like"}</button>
+        <link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet"></link>
+        <ToggleLike onClick={toggleLikeMovie}>{isLiked ? "👎" : "👍"}</ToggleLike>
       </Container>
     );
  }
